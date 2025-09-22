@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trang chủ - Quản lý đơn hàng</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+</head>
+<body>
+
+  <!-- Thanh điều hướng trên -->
+  <nav class="navbar navbar-dark bg-primary">
+    <div class="container-fluid">
+        <!-- Bên trái app-->
+      <a class="navbar-brand" href="#">📦 Quản lý đơn hàng</a>
+        <!-- Bên phải app-->
+      <button class="btn btn-light btn-sm">Thông báo</button>
+      <a href="index.html" class="btn btn-outline-light btn-sm">Đăng xuất</a>
+    </div>
+  </nav>
+
+  <div class="container my-3">
+    <!-- Thông tin tổng quan -->
+    <div class="row text-center mb-4">
+      <div class="col-4">
+        <div class="card p-2">
+          <h5>20</h5>
+          <p class="text-muted">Đơn hôm nay</p>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="card p-2">
+          <h5>8</h5>
+          <p class="text-muted">Đang xử lý</p>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="card p-2">
+          <h5>12</h5>
+          <p class="text-muted">Hoàn thành</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Danh sách đơn hàng -->
+    <h5 class="mb-3">Danh sách đơn hàng</h5>
+    <div class="list-group">
+      <a href="#" class="list-group-item list-group-item-action">
+        <div class="d-flex justify-content-between">
+          <h6 class="mb-1">Đơn #12345</h6>
+          <small class="text-success">Hoàn thành</small>
+        </div>
+        <p class="mb-1">Khách: Nguyễn Văn A</p>
+        <small>Ngày: 22/09/2025</small>
+      </a>
+      <a href="#" class="list-group-item list-group-item-action">
+        <div class="d-flex justify-content-between">
+          <h6 class="mb-1">Đơn #12346</h6>
+          <small class="text-warning">Đang xử lý</small>
+        </div>
+        <p class="mb-1">Khách: Trần Thị B</p>
+        <small>Ngày: 22/09/2025</small>
+      </a>
+    </div>
+  </div>
+
+  <!-- Thanh menu dưới -->
+  <nav class="navbar fixed-bottom navbar-light bg-light border-top">
+    <div class="container d-flex justify-content-around">
+      <a href="#" class="text-center text-decoration-none">
+        <i class="bi bi-house"></i><br>Trang chủ
+      </a>
+      <a href="#" class="text-center text-decoration-none">
+        <i class="bi bi-box-seam"></i><br>Đơn hàng
+      </a>
+      <a href="#" class="text-center text-decoration-none">
+        <i class="bi bi-graph-up"></i><br>Thống kê
+      </a>
+      <a href="#" class="text-center text-decoration-none">
+        <i class="bi bi-gear"></i><br>Cài đặt
+      </a>
+    </div>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
