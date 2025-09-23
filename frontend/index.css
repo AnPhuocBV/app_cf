@@ -1,0 +1,129 @@
+/* Style của home.html */
+  /* Chữ trạng thái Hoàn thành */
+  .hoan-thanh {
+    color: #28a745; /* xanh lá đậm */
+    font-weight: bold;
+  }
+
+  /* Chữ trạng thái Đang xử lý */
+  .cho-xu-ly {
+    color: #dc3545; /* đỏ */
+    font-weight: bold;
+  }
+
+  /* (Tuỳ chọn) Chữ trạng thái Đã hủy */
+  .don-huy {
+    color: #6c757d; /* xám đậm */
+    font-weight: bold;
+  }
+
+  /* Hoàn thành: xanh lá nhạt */
+  .hoan-thanh-background {
+    background-color: #7FFF00 !important;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  /* Đang xử lý: vàng đậm */
+  .cho-xu-ly-background {
+    background-color: #ffc107 !important;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  /* Đã hủy: xám nhạt */
+  .don-huy-background {
+    background-color: #e2e3e5 !important;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+/* Style của index */
+    body {
+      background: #f8f9fa;
+    }
+    .login-container {
+      max-width: 400px;
+      margin: 80px auto;
+      padding: 30px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .btn-primary {
+      width: 100%;
+    }
+
+/* Style danh mục */
+    body {
+      padding: 20px;
+    }
+    .category-item {
+      background-color: #f8f9fa;
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      position: relative;
+    }
+    .category-item img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #dc3545; /* đỏ */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    }
+    .delete-btn:hover {
+    background-color: #c82333;
+}
+
+/* Style tạo đơn */
+.order-item {
+  font-size: 16px;
+  color: #333;
+}
+.order-item ul {
+  padding-left: 20px;
+}
+.product-card {
+  width: 150px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  background-color: #fff;
+}
+.product-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+.product-card img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.order-row {
+  margin-bottom: 10px;
+}
+.order-item ul {
+  padding-left: 20px;
+}

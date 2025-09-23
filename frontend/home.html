@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
+  <link rel="stylesheet" href="index.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Trang chủ - Quản lý đơn hàng</title>
@@ -33,7 +35,7 @@
       <div class="col-4">
         <div class="card p-2">
           <h5>8</h5>
-          <p class="text-muted">Đang xử lý</p>
+          <p class="text-muted">Đang chờ thanh toán</p>
         </div>
       </div>
       <div class="col-4">
@@ -47,33 +49,44 @@
     <!-- Danh sách đơn hàng -->
     <h5 class="mb-3">Danh sách đơn hàng</h5>
     <div class="list-group">
-      <a href="#" class="list-group-item list-group-item-action">
+      <a href="#" class="list-group-item list-group-item-action hoan-thanh-background">
         <div class="d-flex justify-content-between">
           <h6 class="mb-1">Đơn #12345</h6>
-          <small class="text-success">Hoàn thành</small>
+          <small class="hoan-thanh">Hoàn thành</small>
         </div>
         <p class="mb-1">Khách: Nguyễn Văn A</p>
         <small>Ngày: 22/09/2025</small>
       </a>
-      <a href="#" class="list-group-item list-group-item-action">
+      <a href="#" class="list-group-item list-group-item-action cho-xu-ly-background">
         <div class="d-flex justify-content-between">
           <h6 class="mb-1">Đơn #12346</h6>
-          <small class="text-warning">Đang xử lý</small>
+          <small class="cho-xu-ly">ĐANG XỬ LÝ</small>
         </div>
         <p class="mb-1">Khách: Trần Thị B</p>
+        <small>Ngày: 22/09/2025</small>
+      </a>
+      <a href="#" class="list-group-item list-group-item-action don-huy-background">
+        <div class="d-flex justify-content-between">
+          <h6 class="mb-1">Đơn #12346</h6>
+          <small class="don-huy">Đã hủy</small>
+        </div>
+        <p class="mb-1">Khách: Hồ Văn T</p>
         <small>Ngày: 22/09/2025</small>
       </a>
     </div>
   </div>
 
-  <!-- Thanh menu dưới -->
+<!-- Thanh menu dưới -->
   <nav class="navbar fixed-bottom navbar-light bg-light border-top">
     <div class="container d-flex justify-content-around">
-      <a href="#" class="text-center text-decoration-none">
-        <i class="bi bi-house"></i><br>Trang chủ
+      <a href="home.html" class="text-center text-decoration-none">
+        <i class="bi bi-house"></i><br>Đơn hàng
       </a>
-      <a href="#" class="text-center text-decoration-none">
-        <i class="bi bi-box-seam"></i><br>Đơn hàng
+      <a href="taodon.html" class="text-center text-decoration-none">
+        <i class="bi bi-receipt"></i><br>Tạo đơn
+      </a>
+      <a href="danhmuc.html" class="text-center text-decoration-none">
+        <i class="bi bi-box-seam"></i><br>Danh mục
       </a>
       <a href="#" class="text-center text-decoration-none">
         <i class="bi bi-graph-up"></i><br>Thống kê
