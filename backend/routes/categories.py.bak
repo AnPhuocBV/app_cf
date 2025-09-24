@@ -1,0 +1,29 @@
+from flask import Blueprint, request, jsonify
+from models import categories
+
+category_bp = Blueprint('category_bp', __name__)
+
+# Thêm danh mục mới
+@category_bp.route('/api/categories', methods=["POST"])
+def add_category():
+    # Nếu request là JSON
+    if request.is_json:
+        data = request.get_json()
+    else:
+        # Nếu là form-data
+        data = {
+            "name": request.form.get("name"),
+            "price": request.form.get("price"),
+            "image": request.form.get("image"),
+            "description": request.form.get("description")
+        }
+
+    categories.insert_one(data)
+    return jsonify({"message": "✅ Đã thêm danh mục mới"}), 201
+
+
+# Lấy toàn bộ danh mục
+@category_bp.route('/api/categories', methods=["GET"])
+def get_categories():
+    result = list(categories.find({}, {"_id": 0}))
+    return jsonify(result)

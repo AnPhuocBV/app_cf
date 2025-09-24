@@ -1,119 +1,155 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Tạo đơn hàng</title>
+  <meta charset="utf-8" />
+  <title>Tạo đơn</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="index.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 <body>
   <div class="container py-4">
     <h3 class="mb-4">🧾 Tạo đơn hàng</h3>
 
-    <form id="orderForm" class="mb-4">
-      <div class="mb-3">
-        <label for="customerName" class="form-label">Tên khách hàng</label>
-        <input type="text" class="form-control" id="customerName" required>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Chọn món ăn</label>
+    <div class="row">
+      <div class="col-md-6">
+        <h5>Danh sách món</h5>
         <div id="productGallery" class="d-flex flex-wrap gap-3"></div>
       </div>
 
-      <div class="mb-3">
-        <label class="form-label">Món đã chọn</label>
-        <div id="selectedItems"></div>
-      </div>
+      <div class="col-md-6">
+        <h5>Món đã chọn</h5>
+        <form id="orderForm" class="mb-3">
+          <div class="mb-2">
+            <label for="customerName" class="form-label">Tên khách hàng</label>
+            <input id="customerName" class="form-control" required />
+          </div>
 
-      <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-primary">Tạo đơn hàng</button>
-        <button type="button" class="btn btn-secondary" id="resetBtn">Nhập lại</button>
-      </div>
-    </form>
+          <div id="selectedItems" class="mb-3"></div>
 
-    <h5>📋 Đơn hàng đã tạo</h5>
-    <div id="orderResult"></div>
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Gửi đơn</button>
+            <button type="button" id="resetBtn" class="btn btn-secondary">Làm mới</button>
+          </div>
+        </form>
+
+        <h5>Kết quả</h5>
+        <div id="orderResult"></div>
+      </div>
+    </div>
   </div>
 
-  <script>
-    const categories = JSON.parse(localStorage.getItem('categories')) || [];
-    const gallery = document.getElementById('productGallery');
-    const selected = document.getElementById('selectedItems');
-    const form = document.getElementById('orderForm');
-    const result = document.getElementById('orderResult');
-    const resetBtn = document.getElementById('resetBtn');
+  <script type="module">
+    import { getCategories, createOrderJSON } from './api.js';
 
-    const selectedMap = new Map();
+    window.addEventListener('DOMContentLoaded', () => {
+      const gallery = document.getElementById('productGallery');
+      const selected = document.getElementById('selectedItems');
+      const form = document.getElementById('orderForm');
+      const result = document.getElementById('orderResult');
+      const resetBtn = document.getElementById('resetBtn');
 
-    categories.forEach(item => {
-      const card = document.createElement('div');
-      card.className = 'product-card';
-      card.innerHTML = `
-        <img src="${item.image}" alt="${item.name}">
-        <div><strong>${item.name}</strong><br>Giá: ${parseInt(item.price).toLocaleString()} VNĐ</div>
-      `;
-      card.onclick = () => {
-        if (selectedMap.has(item.name)) return;
+      const missing = [];
+      if (!gallery) missing.push('#productGallery');
+      if (!selected) missing.push('#selectedItems');
+      if (!form) missing.push('#orderForm');
+      if (!result) missing.push('#orderResult');
+      if (!resetBtn) missing.push('#resetBtn');
+      if (missing.length) {
+        console.error('Missing elements in taodon.html:', missing);
+        alert('Lỗi: trang thiếu element: ' + missing.join(', '));
+        return;
+      }
 
-        const row = document.createElement('div');
-        row.className = 'order-row';
-        row.innerHTML = `
-          <strong>${item.name}</strong> – ${parseInt(item.price).toLocaleString()} VNĐ
-          <input type="number" min="1" value="1" class="form-control d-inline-block w-auto ms-2">
-          <button class="btn btn-danger btn-sm ms-2">Xóa</button>
-        `;
-        row.querySelector('button').onclick = () => {
-          selectedMap.delete(item.name);
-          row.remove();
-        };
-        selected.appendChild(row);
-        selectedMap.set(item.name, { ...item, row });
-      };
-      gallery.appendChild(card);
-    });
+      const selectedMap = new Map();
 
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const name = document.getElementById('customerName').value;
-      if (!name.trim()) return alert("Vui lòng nhập tên khách hàng.");
+      async function loadCategories() {
+        try {
+          const categories = await getCategories();
+          (categories || []).forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card p-2';
+            card.style.width = '160px';
+            card.innerHTML = `
+              <img src="${item.image}" alt="${item.name}" class="card-img-top" style="height:90px;object-fit:cover;">
+              <div class="mt-2"><strong>${item.name}</strong><br>Giá: ${parseInt(item.price || 0).toLocaleString()} VNĐ</div>
+            `;
+            card.addEventListener('click', () => {
+              if (selectedMap.has(item.name)) return;
+              const row = document.createElement('div');
+              row.className = 'order-row d-flex align-items-center gap-2 mb-2';
+              row.innerHTML = `
+                <strong class="me-2">${item.name}</strong>
+                <span>${parseInt(item.price || 0).toLocaleString()} VNĐ</span>
+                <input type="number" min="1" value="1" class="form-control d-inline-block w-auto ms-2">
+                <button class="btn btn-danger btn-sm ms-2">Xóa</button>
+              `;
+              const btn = row.querySelector('button');
+              btn.addEventListener('click', () => {
+                selectedMap.delete(item.name);
+                row.remove();
+              });
+              selected.appendChild(row);
+              selectedMap.set(item.name, { ...item, row });
+            });
+            gallery.appendChild(card);
+          });
+        } catch (err) {
+          console.error(err);
+          alert("Không thể tải món từ server.");
+        }
+      }
 
-      if (selectedMap.size === 0) return alert("Vui lòng chọn ít nhất một món.");
+      loadCategories();
 
-      const items = [];
-      selectedMap.forEach((item, key) => {
-        const qty = item.row.querySelector('input').value;
-        if (qty && parseInt(qty) > 0) {
-          items.push({ name: key, price: item.price, qty });
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nameEl = document.getElementById('customerName');
+        const name = nameEl ? nameEl.value.trim() : '';
+        if (!name) return alert("Vui lòng nhập tên khách hàng.");
+        if (selectedMap.size === 0) return alert("Vui lòng chọn ít nhất một món.");
+
+        const items = [];
+        selectedMap.forEach((item, key) => {
+          const qtyEl = item.row.querySelector('input');
+          const qty = parseInt(qtyEl?.value || 0) || 0;
+          if (qty > 0) items.push({ name: key, price: item.price, qty });
+        });
+
+        try {
+          await createOrderJSON({ customer: name, items });
+          const div = document.createElement('div');
+          div.className = 'order-item';
+          div.innerHTML = `
+            <div class="p-3 border rounded mb-3 bg-light">
+              <strong>Khách hàng:</strong> ${name}<br>
+              <strong>Món hàng:</strong>
+              <ul>
+                ${items.map(i => `<li>${i.name} – ${i.qty} x ${parseInt(i.price || 0).toLocaleString()} VNĐ</li>`).join('')}
+              </ul>
+            </div>
+          `;
+          result.appendChild(div);
+          form.reset();
+          selected.innerHTML = '';
+          selectedMap.clear();
+        } catch (err) {
+          console.error(err);
+          alert("Tạo đơn thất bại.");
         }
       });
 
-      const div = document.createElement('div');
-      div.className = 'order-item';
-      div.innerHTML = `
-        <div class="p-3 border rounded mb-3 bg-light">
-          <strong>Khách hàng:</strong> ${name}<br>
-          <strong>Món hàng:</strong>
-          <ul>
-            ${items.map(i => `<li>${i.name} – ${i.qty} x ${parseInt(i.price).toLocaleString()} VNĐ</li>`).join('')}
-          </ul>
-        </div>
-      `;
-      result.appendChild(div);
-      form.reset();
-      selected.innerHTML = '';
-      selectedMap.clear();
+      resetBtn.addEventListener('click', () => {
+        form.reset();
+        selected.innerHTML = '';
+        selectedMap.clear();
+        result.innerHTML = '';
+      });
     });
-
-    resetBtn.onclick = function() {
-      form.reset();
-      selected.innerHTML = '';
-      selectedMap.clear();
-      result.innerHTML = '';
-    };
   </script>
 
-  <!-- Thanh menu dưới -->
+<!-- Thanh menu dưới -->
   <nav class="navbar fixed-bottom navbar-light bg-light border-top">
     <div class="container d-flex justify-content-around">
       <a href="home.html" class="text-center text-decoration-none">
@@ -133,5 +169,6 @@
       </a>
     </div>
   </nav>
+
 </body>
 </html>

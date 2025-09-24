@@ -1,0 +1,70 @@
+// APP_CF/frontend/api.js
+
+// Cấu hình URL backend (sửa nếu bạn deploy hoặc chạy port khác)
+const BASE_URL = "http://127.0.0.1:5000";
+
+// Helpers
+async function request(url, options = {}) {
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "Content-Type": options.body instanceof FormData ? undefined : "application/json",
+      },
+      ...options,
+    });
+    const contentType = res.headers.get("content-type") || "";
+    const isJson = contentType.includes("application/json");
+    const data = isJson ? await res.json() : await res.text();
+
+    if (!res.ok) {
+      throw new Error(
+        typeof data === "string" ? data : data?.error || `HTTP ${res.status}`
+      );
+    }
+    return data;
+  } catch (err) {
+    console.error("API error:", err);
+    throw err;
+  }
+}
+
+// Categories API
+export async function getCategories() {
+  return request(`${BASE_URL}/api/categories`, { method: "GET" });
+}
+
+export async function addCategoryJSON(payload) {
+  // payload: { name, price, image, description }
+  return request(`${BASE_URL}/api/categories`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function addCategoryForm(formData) {
+  // formData: new FormData(); formData.append("name", ...); ...
+  return request(`${BASE_URL}/api/categories`, {
+    method: "POST",
+    body: formData,
+  });
+}
+
+// Orders API
+export async function getOrders() {
+  return request(`${BASE_URL}/api/orders`, { method: "GET" });
+}
+
+export async function createOrderJSON(payload) {
+  // payload: { customer, items, note? }
+  return request(`${BASE_URL}/api/orders`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function createOrderForm(formData) {
+  return request(`${BASE_URL}/api/orders`, {
+    method: "POST",
+    body: formData,
+  });
+}

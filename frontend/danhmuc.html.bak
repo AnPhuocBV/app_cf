@@ -1,4 +1,3 @@
-<!-- ...existing code... -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -6,8 +5,11 @@
   <title>Thêm danh mục sản phẩm</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="index.css">
+  <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
+
+
 <body>
   <div class="container py-4">
     <h3 class="mb-4">📦 Thêm danh mục sản phẩm</h3>
@@ -29,72 +31,58 @@
     </form>
 
     <h5>📋 Danh sách danh mục</h5>
-    <div id="categoryList" class="d-flex flex-wrap gap-3"></div>
+    <div id="categoryList"></div>
   </div>
 
-  <script type="module">
-    import { getCategories, addCategoryJSON, deleteCategory } from './api.js';
-
+  <script>
     const form = document.getElementById('categoryForm');
     const list = document.getElementById('categoryList');
 
-    window.addEventListener('load', async () => {
-      try {
-        const saved = await getCategories();
-        (saved || []).forEach(item => renderItem(item));
-      } catch (err) {
-        console.error('Load categories failed, fallback to local:', err);
-        const backup = JSON.parse(localStorage.getItem('categories')) || [];
-        backup.forEach(item => renderItem(item));
-      }
-    });
+    // Load từ LocalStorage khi mở trang
+    window.onload = function() {
+      const saved = JSON.parse(localStorage.getItem('categories')) || [];
+      saved.forEach(item => renderItem(item));
+    };
 
     form.addEventListener('submit', function(e) {
       e.preventDefault();
-      const name = document.getElementById('categoryName').value.trim();
+
+      const name = document.getElementById('categoryName').value;
       const price = document.getElementById('categoryPrice').value;
       const imageInput = document.getElementById('categoryImage');
       const file = imageInput.files[0];
-      if (!file || !name) return;
+
+      if (!file) return;
 
       const reader = new FileReader();
-      reader.onload = async function() {
-        const item = { name, price, image: reader.result };
-        try {
-          await addCategoryJSON(item);
-          saveToLocal(item);
-          renderItem(item);
-          form.reset();
-        } catch (err) {
-          console.error(err);
-          alert("Thêm danh mục thất bại. Kiểm tra server hoặc CORS.");
-        }
+      reader.onload = function() {
+        const item = {
+          name,
+          price,
+          image: reader.result
+        };
+
+        saveToLocal(item);
+        renderItem(item);
+        form.reset();
       };
       reader.readAsDataURL(file);
     });
 
     function renderItem(item) {
       const div = document.createElement('div');
-      div.className = 'card p-2';
-      div.style.width = '180px';
+      div.className = 'category-item';
       div.innerHTML = `
-        <img src="${item.image}" alt="${item.name}" class="card-img-top" style="height:110px;object-fit:cover;">
-        <div class="mt-2">
+        <img src="${item.image}" alt="${item.name}">
+        <div>
           <strong>${item.name}</strong><br>
-          Giá: ${parseInt(item.price || 0).toLocaleString()} VNĐ
+          Giá: ${parseInt(item.price).toLocaleString()} VNĐ
         </div>
-        <button class="delete-btn btn btn-sm btn-outline-danger mt-2 w-100">Xóa</button>
+        <button class="delete-btn">Xóa</button>
       `;
-      div.querySelector('.delete-btn').onclick = async function() {
-        if (!confirm('Xác nhận xóa?')) return;
-        try {
-          await deleteCategory(item.name);
-          div.remove();
-          removeFromLocal(item);
-        } catch (err) {
-          console.error(err);
-          alert("Xóa thất bại. Kiểm tra server hoặc CORS.");
-        }
+      div.querySelector('.delete-btn').onclick = function() {
+        div.remove();
+        removeFromLocal(item);
       };
       list.appendChild(div);
     }
@@ -112,6 +100,8 @@
     }
   </script>
 
+  
+<!-- Thanh menu dưới -->
   <nav class="navbar fixed-bottom navbar-light bg-light border-top">
     <div class="container d-flex justify-content-around">
       <a href="home.html" class="text-center text-decoration-none">
@@ -133,4 +123,3 @@
   </nav>
 </body>
 </html>
-<!-- ...existing code... -->

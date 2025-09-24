@@ -1,0 +1,27 @@
+from flask import Blueprint, request, jsonify
+from models import orders
+from datetime import datetime
+
+order_bp = Blueprint('order_bp', __name__)
+
+# Tạo đơn hàng mới
+@order_bp.route('/api/orders', methods=["POST"])
+def create_order():
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = {
+            "customer": request.form.get("customer"),
+            "items": request.form.get("items")  # có thể là JSON string
+        }
+
+    data["createdAt"] = datetime.utcnow()
+    orders.insert_one(data)
+    return jsonify({"message": "✅ Đã tạo đơn hàng"}), 201
+
+
+# Lấy toàn bộ đơn hàng
+@order_bp.route('/api/orders', methods=["GET"])
+def get_orders():
+    result = list(orders.find({}, {"_id": 0}).sort("createdAt", -1))
+    return jsonify(result)
